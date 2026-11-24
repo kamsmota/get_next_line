@@ -6,7 +6,7 @@
 /*   By: kams <kams@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/19 17:52:26 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/24 22:53:24 by kams             ###   ########.fr       */
+/*   Updated: 2026/11/24 23:11:16 by kams             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ char	*ft_start(char **buffer)
 	char	*line;
 	size_t	i;
 
-	if (!buffer || !*buffer || !(*buffer)[0] == '\0')
+	if (!buffer || !*buffer || (*buffer)[0] != '\0')
 		return (NULL);
 	i = 0;
 	while ((*buffer)[i] && (*buffer)[i] != '\n')
 		i++;
-	if (buffer[i] == '\n')
+	if (*(buffer)[i] == '\n')
 		i++;
 	line = malloc(i + 1);
 	if (!line)
@@ -50,6 +50,8 @@ char	*ft_update(char *buffer)
 		j = 0;
 		while (buffer[i + j])
 			j++;
+		if (j == 0)
+			return (NULL);
 		stash = malloc(j + 1);
 		if (!stash)
 			return (NULL);
@@ -63,9 +65,9 @@ char	*ft_update(char *buffer)
 
 char	*ft_read_file(int fd, char *stash)
 {
-	char	*buffer;
-	char	*temp;
-	int		byts;
+	char		*buffer;
+	char		*temp;
+	size_t		byts;
 	
 	if (!stash)
 	{
@@ -108,26 +110,42 @@ char	*ft_read_file(int fd, char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	**buffer;
-	int			end_word;
+	static char	*stash;
 	char		*line;
+	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	line = ft_start(buffer);
-	end_word = -1; // palavra antes do \n
-	if (!line)
+	stash = ft_read_file(fd, stash);
+	if (!stash)
 		return (NULL);
+	line = ft_start(stash);
+	if (!line)
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}	
+	temp = ft_update(stash);
+	free(stash);
+	stash = temp;
+	return (line);
 }
 
-// works the same when reading a file and when reading from the standard input
-// must include the \n character and it is also the terminating to get the line
+//#include <fcntl.h>
+//int main(void)
+//{
+//    int fd;
+//    char *line;
 
-// read function to read the line, so line (variable) receives read with fd, buffer and buffersize
-// if !line, return null and free the line, also the string that was read
-// if read == 0 that means its the end of the file
-// if read == -1 means an error occurred
-
-// how to do it:
-// on gnl function, check if the fd exists an dif the size of the buffer isnt 0 or minor
-// its necessary to iniciate the line, so it can have malloc
+//    fd = open("test.txt", O_RDONLY);
+//    line = get_next_line(fd);
+//    while (line)
+//    {
+//        printf("%s", line);
+//        free(line);
+//        line = get_next_line(fd);
+//    }
+//    close(fd);
+//    return (0);
+//}
