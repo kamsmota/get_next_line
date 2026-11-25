@@ -6,7 +6,7 @@
 /*   By: kmota <kmota@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/19 17:52:26 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/25 15:37:06 by kmota            ###   ########.fr       */
+/*   Updated: 2026/11/25 16:36:31 by kmota            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static char	*ft_start(char *buffer)
 {
-	char	*line;
 	size_t	i;
 
 	i = 0;
@@ -23,13 +22,9 @@ static char	*ft_start(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (buffer[i] == '\n')
-		i++;
-	line = malloc(i + 1);
-	if (!line)
-		return (NULL);
-	ft_memcpy(line, buffer, i);
-	line[i] = '\0';
-	return (line);
+		return (ft_substr(buffer, 0, i + 1));
+	else
+		return (ft_substr(buffer, 0, i));
 }
 
 static char	*ft_update(char *buffer)
@@ -37,20 +32,16 @@ static char	*ft_update(char *buffer)
 	size_t	i;
 	char	*stash;
 
-	if (!buffer || buffer[0] == '\0')
-		return (NULL);
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	if (buffer[i] == '\n')
-	{
-		i++;
-		if (!buffer[i])
-			return (NULL);
-		stash = ft_substr(buffer, i, ft_strlen(buffer) - i - 1);
-		return (stash);
-	}
-	return (NULL);
+	if (!buffer[i])
+		return (free(buffer), NULL);
+	stash = ft_substr(buffer, i + 1, ft_strlen(buffer) - i - 1);
+	free(buffer);
+	if (!stash || stash[0] == '\0')
+		return (free(stash), NULL);
+	return (stash);
 }
 
 static char	*ft_read_file(int fd, char *stash)
@@ -58,6 +49,9 @@ static char	*ft_read_file(int fd, char *stash)
 	char		*buffer;
 	size_t		byts;
 
+	buffer = malloc((size_t)BUFFER_SIZE + 1);
+	if (!buffer)
+		return (free(stash), NULL);
 	if (!stash)
 	{
 		stash = malloc(1);
@@ -65,11 +59,8 @@ static char	*ft_read_file(int fd, char *stash)
 			return (NULL);
 		stash[0] = '\0';
 	}
-	buffer = malloc((size_t)BUFFER_SIZE + 1);
-	if (!buffer)
-		return (free(stash), NULL);
 	byts = 1;
-	while (byts > 0)
+	while (byts > 0 && !ft_strchr(stash, '\n'))
 	{
 		byts = read(fd, buffer, BUFFER_SIZE);
 		if (byts < 0)
@@ -90,7 +81,6 @@ char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char		*line;
-	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -99,14 +89,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = ft_start(stash);
 	if (!line)
-	{
-		free(stash);
-		stash = NULL;
-		return (NULL);
-	}
-	temp = ft_update(stash);
-	free(stash);
-	stash = temp;
+		return (free(stash), stash = NULL, NULL);
+	stash = ft_update(stash);
 	return (line);
 }
 
