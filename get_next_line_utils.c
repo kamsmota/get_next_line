@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kams <kams@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: kmota <kmota@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/20 14:52:00 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/24 22:41:59 by kams             ###   ########.fr       */
+/*   Updated: 2026/11/25 14:55:31 by kmota            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	size_t	i;
+	size_t			i;
 	unsigned char	*dst;
 	unsigned char	*sr;
 
@@ -41,7 +41,7 @@ int	ft_strlen(char *s)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	lenone;
 	size_t	lentwo;
@@ -82,4 +82,28 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *) &s[i]);
 	}
 	return (0);
+}
+
+char	*ft_substr(char *s, unsigned int start, size_t len)
+{
+	char	*str;
+	size_t	i;
+
+	if (!s)
+		return (NULL);
+	if (start >= ft_strlen(s))
+		len = 0;
+	else if (len > ft_strlen(s) - start)
+		len = ft_strlen(s) - start;
+	str = malloc(len + 1);
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		str[i] = s[start + i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
 }
