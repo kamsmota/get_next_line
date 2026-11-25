@@ -6,7 +6,7 @@
 /*   By: kmota <kmota@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/19 17:52:26 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/25 14:56:09 by kmota            ###   ########.fr       */
+/*   Updated: 2026/11/25 15:37:06 by kmota            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static char	*ft_start(char *buffer)
 static char	*ft_update(char *buffer)
 {
 	size_t	i;
-	size_t	j;
 	char	*stash;
 
 	if (!buffer || buffer[0] == '\0')
@@ -46,20 +45,12 @@ static char	*ft_update(char *buffer)
 	if (buffer[i] == '\n')
 	{
 		i++;
-		j = 0;
-		while (buffer[i + j])
-			j++;
-		if (j == 0)
+		if (!buffer[i])
 			return (NULL);
-		stash = malloc(j + 1);
-		if (!stash)
-			return (NULL);
-		ft_memcpy(stash, buffer + i, j);
-		stash[j] = '\0';
+		stash = ft_substr(buffer, i, ft_strlen(buffer) - i - 1);
+		return (stash);
 	}
-	else
-		return (NULL);
-	return (stash);
+	return (NULL);
 }
 
 static char	*ft_read_file(int fd, char *stash)
