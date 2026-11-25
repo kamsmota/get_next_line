@@ -3,35 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmota <kmota@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kams <kams@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/20 14:52:00 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/25 17:35:11 by kmota            ###   ########.fr       */
+/*   Updated: 2026/11/25 20:57:22 by kams             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t			i;
-	unsigned char	*dst;
-	unsigned char	*sr;
-
-	if (!dest || !src)
-		return (NULL);
-	dst = (unsigned char *)dest;
-	sr = (unsigned char *)src;
-	i = 0;
-	while (i < n)
-	{
-		dst[i] = sr[i];
-		i++;
-	}
-	return (dst);
-}
-
-int	ft_strlen(char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t	i;
 
@@ -43,24 +24,25 @@ int	ft_strlen(char *s)
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	size_t	lenone;
-	size_t	lentwo;
+	size_t	i;
+	size_t	j;
 	char	*str;
 
 	if (!s1 || !s2)
+		return (NULL);
+	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (s1[i])
 	{
-		return (0);
+		str[i] = s1[i];
+		i++;
 	}
-	lenone = ft_strlen(s1);
-	lentwo = ft_strlen(s2);
-	str = malloc ((lenone + lentwo + 1) * sizeof(char));
-	if (str == NULL)
-	{
-		return (0);
-	}
-	ft_memcpy(str, s1, lenone);
-	ft_memcpy(str + lenone, s2, lentwo);
-	str[lenone + lentwo] = '\0';
+	j = 0;
+	while (s2[j])
+		str[i++] = s2[j++];
+	str[i] = '\0';
 	return (str);
 }
 
@@ -81,10 +63,10 @@ char	*ft_strchr(const char *s, int c)
 	{
 		return ((char *) &s[i]);
 	}
-	return (0);
+	return (NULL);
 }
 
-char	*ft_substr(char *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, size_t start, size_t len)
 {
 	char	*str;
 	size_t	i;

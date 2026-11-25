@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmota <kmota@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kams <kams@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/19 17:52:26 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/25 17:44:39 by kmota            ###   ########.fr       */
+/*   Updated: 2026/11/25 21:09:38 by kams             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,11 @@ static char	*ft_update(char *buffer)
 
 static char	*ft_read_file(int fd, char *stash)
 {
-	char		*buffer;
-	size_t		byts;
+	char	*buffer;
+	char	*temp;
+	size_t	byts;
 
-	buffer = malloc((size_t)BUFFER_SIZE + 1);
+	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (free(stash), NULL);
 	if (!stash)
@@ -59,16 +60,16 @@ static char	*ft_read_file(int fd, char *stash)
 	{
 		byts = read(fd, buffer, BUFFER_SIZE);
 		if (byts < 0)
-			break ;
+			return (free(buffer), free(stash), NULL);
 		buffer[byts] = '\0';
 		if (byts > 0)
-			stash = ft_strjoin(stash, buffer);
-		if (!stash)
-			return (free(buffer), free(stash), NULL);
+		{
+			temp = ft_strjoin(stash, buffer);
+			free(stash);
+			stash = temp;
+		}
 	}
 	free(buffer);
-	if (byts < 0)
-		return (free(stash), NULL);
 	return (stash);
 }
 
