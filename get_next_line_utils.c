@@ -6,7 +6,7 @@
 /*   By: kmota <kmota@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/20 14:52:00 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/25 16:16:09 by kmota            ###   ########.fr       */
+/*   Updated: 2026/11/25 17:35:11 by kmota            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,26 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	}
 	str[i] = '\0';
 	return (str);
+}
+
+char	*ft_strdup(char *s)
+{
+	size_t	i;
+	size_t	size;
+	char	*dup;
+
+	i = 0;
+	size = ft_strlen(s);
+	dup = malloc((size + 1) * sizeof(char));
+	if (dup == NULL)
+	{
+		return (0);
+	}
+	while (i < size)
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }
