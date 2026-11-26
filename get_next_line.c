@@ -6,7 +6,7 @@
 /*   By: kams <kams@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/19 17:52:26 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/25 21:37:23 by kams             ###   ########.fr       */
+/*   Updated: 2026/11/26 22:26:54 by kams             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static char	*ft_read_file(int fd, char *stash)
 {
 	char	*buffer;
 	char	*temp;
-	ssize_t	byts;
+	int		byts;
 
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
@@ -88,23 +88,4 @@ char	*get_next_line(int fd)
 		return (free(stash), stash = NULL, NULL);
 	stash = ft_update(stash);
 	return (line);
-}
-
-#include <fcntl.h>
-
-int	main (void)
-{
-	int		fd;
-	char	*line;
-
-	fd = open("test.txt", O_RDONLY);
-	line = get_next_line(fd);
-	while (line)
-	{
-		printf("%s", line);
-		free(line);
-		line = get_next_line(fd);
-	}
-	close(fd);
-	return (0);
 }
