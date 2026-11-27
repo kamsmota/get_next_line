@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kams <kams@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: kmota <kmota@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/19 17:52:26 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/26 22:26:54 by kams             ###   ########.fr       */
+/*   Created: 2026/11/27 14:20:36 by kmota             #+#    #+#             */
+/*   Updated: 2026/11/27 15:49:49 by kmota            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,26 @@ static char	*ft_update(char *buffer)
 static char	*ft_read_file(int fd, char *stash)
 {
 	char	*buffer;
-	char	*temp;
 	int		byts;
 
+	if (!stash)
+		stash = ft_strdup("");
+	if (!stash)
+		return (NULL);
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (free(stash), NULL);
-	if (!stash)
-		stash = ft_strdup("");
 	byts = 1;
 	while (byts > 0 && !ft_strchr(stash, '\n'))
 	{
 		byts = read(fd, buffer, BUFFER_SIZE);
 		if (byts < 0)
-			return (free(buffer), free(stash), NULL);
+			return (free(buffer), free(stash), stash = NULL, NULL);
 		buffer[byts] = '\0';
 		if (byts > 0)
-		{
-			temp = ft_strjoin(stash, buffer);
-			free(stash);
-			stash = temp;
-		}
+			stash = ft_strjoin(stash, buffer);
+		if (!stash)
+			return (NULL);
 	}
 	free(buffer);
 	return (stash);
@@ -89,3 +88,22 @@ char	*get_next_line(int fd)
 	stash = ft_update(stash);
 	return (line);
 }
+
+// #include <fcntl.h>
+
+// int	main (void)
+// {
+// 	int		fd;
+// 	char	*line;
+
+// 	fd = open("test.txt", O_RDONLY);
+// 	line = get_next_line(fd);
+// 	while (line)
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kams <kams@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: kmota <kmota@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/20 14:52:05 by kmota             #+#    #+#             */
-/*   Updated: 2026/11/26 21:50:26 by kams             ###   ########.fr       */
+/*   Created: 2026/11/27 14:21:04 by kmota             #+#    #+#             */
+/*   Updated: 2026/11/27 15:52:39 by kmota            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[j])
 		str[i++] = s2[j++];
 	str[i] = '\0';
-	return (str);
+	return (free(s1), str);
 }
 
 char	*ft_strchr(const char *s, int c)
