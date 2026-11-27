@@ -8,7 +8,6 @@
 ## Languages Used
 
 - `C`
-- `Makefile`
 
 ## Objective
 
